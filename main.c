@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<string.h>
+#include <string.h>
 
 void printBoard(int size, char grid[size][size]);
 int isWon(int row, int col, char grid[row][col]);
@@ -19,14 +19,12 @@ int main()
     char first_player_letter;  // either 'x' or 'o'
     char second_player_letter; // either 'x' or 'o'
 
-
     do {
         printf("Enter Grid Size: ");
         scanf("%d", &size);
-        if (size < 3) printf("Grid Size Must Be Greater or Equal than 3.\n");
+        if (size < 3)
+            printf("Grid Size Must Be Greater or Equal than 3.\n");
     } while (size < 3);
-
-    
 
     char grid[size][size];
 
@@ -67,16 +65,15 @@ int main()
     // Assigning letter to second player based on first player.
     second_player_letter = (first_player_letter == 'x') ? 'o' : 'x';
 
-    // player state.
-    char current_player[BUFFER_SIZE];
+    char current_player[BUFFER_SIZE];  // player state.
     strcpy(current_player, first_player);
-    
+
     printBoard(size, grid);
 
     while (max_input != 0)
     {
         int postion;
-        printf("%s, your Turn --> (1-%d): ", current_player,  size * size);
+        printf("%s, your Turn --> (1-%d): ", current_player, size * size);
         scanf("%d", &postion);
 
         if (postion < 1 || postion > size * size)
@@ -84,14 +81,17 @@ int main()
             printf("Invalid input. Please enter a number between 1-%d.\n", max_input);
             continue;
         }
-        
+
         // Mapping postion to get the indexes.
         int m = 0, n = 0;
         int found = 0; // flag to indicate when to stop the loop.
-        for (int i = 0; i < size && !found; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < size && !found; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
                 n += 1;
-                if (n == postion) {
+                if (n == postion)
+                {
                     m = i;
                     n = j;
                     found = 1;
@@ -101,17 +101,16 @@ int main()
         }
 
         address = &grid[m][n];
-
-        // TODO: Handle the case if user provides same postionber twice.
-
-        // Assigning letters.
-        if (*address == ' ') {
+        // Assigning letters to the players..
+        if (*address == ' ')
+        {
             *address = (strcmp(current_player, first_player) == 0) ? first_player_letter : second_player_letter;
-        } else {
+        }
+        else
+        {
             printf("Invalid postion! Try agin.\n");
             continue;
         }
-        
 
         if (isWon(size, size, grid) == 1)
         {
@@ -121,8 +120,10 @@ int main()
         }
 
         // Managing the player state to switch between both player.
-        if (strcmp(current_player, first_player) == 0) strcpy(current_player, second_player);
-        else strcpy(current_player, first_player);
+        if (strcmp(current_player, first_player) == 0)
+            strcpy(current_player, second_player);
+        else
+            strcpy(current_player, first_player);
 
         printBoard(size, grid);
 
@@ -143,7 +144,8 @@ void printBoard(int size, char grid[size][size])
             printf("| %c ", grid[i][j]);
         }
         printf("|\n");
-        for (int k = 0; k < size; k++) {
+        for (int k = 0; k < size; k++)
+        {
             printf("+---");
         }
         printf("+\n");

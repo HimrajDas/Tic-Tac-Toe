@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include<string.h>
 
-
+#define MUSIC_PATH = "game_music.mp3"
 
 void printBoard(int size, char grid[size][size]);
 int isWon(int row, int col, char grid[row][col]);
