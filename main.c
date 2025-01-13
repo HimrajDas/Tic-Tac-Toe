@@ -19,8 +19,14 @@ int main()
     char first_player_letter;  // either 'x' or 'o'
     char second_player_letter; // either 'x' or 'o'
 
-    printf("Enter Grid Size: ");
-    scanf("%d", &size);
+
+    do {
+        printf("Enter Grid Size: ");
+        scanf("%d", &size);
+        if (size < 3) printf("Grid Size Must Be Greater or Equal than 3.\n");
+    } while (size < 3);
+
+    
 
     char grid[size][size];
 
@@ -99,7 +105,13 @@ int main()
         // TODO: Handle the case if user provides same postionber twice.
 
         // Assigning letters.
-        *address = (strcmp(current_player, first_player) == 0) ? first_player_letter : second_player_letter;
+        if (*address == ' ') {
+            *address = (strcmp(current_player, first_player) == 0) ? first_player_letter : second_player_letter;
+        } else {
+            printf("Invalid postion! Try agin.\n");
+            continue;
+        }
+        
 
         if (isWon(size, size, grid) == 1)
         {
