@@ -1,177 +1,248 @@
 #include <stdio.h>
+#include<string.h>
 
-void printBoard(char array[3][3]);
-int isWon(int row, int col, char array[row][col]);
+void printBoard(int size, char grid[size][size]);
+int isWon(int row, int col, char grid[row][col]);
 void greeting();
 
-int main() {
+const int BUFFER_SIZE = 10;
 
-    
-    char array[3][3] = {
-        {' ', ' ', ' '},
-        {' ', ' ', ' '},
-        {' ', ' ', ' '}
-    };
-    char x = 'x';
-    char o = 'o';
-    char *address;
-    int max_input = 9;
-    int user_state = 0;
-
+int main()
+{
     greeting();
 
-    while (max_input != 0)
-    {   
-        int num;
-        printf("Enter the positon (1-9): ");
-        scanf("%d", &num);
+    char *address;
+    int user_state = 0;
+    int size;
+    char first_player[BUFFER_SIZE];
+    char second_player[BUFFER_SIZE];
+    char first_player_letter;  // either 'x' or 'o'
+    char second_player_letter; // either 'x' or 'o'
 
-        if (num < 1 || num > 9) {
-            printf("Invalid input. Please enter a number between 1-9.\n");
+    printf("Enter Grid Size: ");
+    scanf("%d", &size);
+
+    char grid[size][size];
+
+    int max_input = size * size;
+
+    // filled the grid with empty spaces.
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            grid[i][j] = ' ';
+        }
+    }
+
+    getchar();
+
+    // Take the player names.
+    printf("Name of the first player: ");
+    fgets(first_player, BUFFER_SIZE, stdin);
+
+    // Removing the newline character if present
+    first_player[strcspn(first_player, "\n")] = '\0';
+
+    printf("Name of the second player: ");
+    fgets(second_player, BUFFER_SIZE, stdin);
+
+    // Removing the newline character if present
+    second_player[strcspn(second_player, "\n")] = '\0';
+
+    // Let the player choose a letter.
+    do {
+        printf("Pick letters: 'x' or 'o'\n");
+        printf("Choose your letter %s: ", first_player);
+        scanf(" %c", &first_player_letter);
+    } while (
+        (first_player_letter != 'x' && first_player_letter != 'o'));
+
+    // Assigning letter to second player based on first player.
+    second_player_letter = (first_player_letter == 'x') ? 'o' : 'x';
+
+    // player state.
+    char current_player[BUFFER_SIZE];
+    strcpy(current_player, first_player);
+    
+    printBoard(size, grid);
+
+    while (max_input != 0)
+    {
+        int postion;
+        printf("%s, your Turn --> (1-%d): ", current_player,  size * size);
+        scanf("%d", &postion);
+
+        if (postion < 1 || postion > size * size)
+        {
+            printf("Invalid input. Please enter a number between 1-%d.\n", max_input);
             continue;
         }
+        
+        // Mapping postion to get the indexes.
+        int m = 0, n = 0;
+        int found = 0; // flag to indicate when to stop the loop.
+        for (int i = 0; i < size && !found; i++) {
+            for (int j = 0; j < size; j++) {
+                n += 1;
+                if (n == postion) {
+                    m = i;
+                    n = j;
+                    found = 1;
+                    break;
+                }
+            }
+        }
 
-        switch (num) {
-        case 1:
-            address = &array[0][0];
-            break;
-        case 2:
-            address = &array[0][1];
-            break;
-        case 3:
-            address = &array[0][2];
-            break;
-        case 4:
-            address = &array[1][0];
-            break;
-        case 5:
-            address = &array[1][1];
-            break;
-        case 6:
-            address = &array[1][2];
-            break;
-        case 7:
-            address = &array[2][0];
-            break;
-        case 8:
-            address = &array[2][1];
-            break;
-        case 9:
-            address = &array[2][2];
-        default:
+        address = &grid[m][n];
+
+        // TODO: Handle the case if user provides same postionber twice.
+
+        // Assigning letters.
+        *address = (strcmp(current_player, first_player) == 0) ? first_player_letter : second_player_letter;
+
+        if (isWon(size, size, grid) == 1)
+        {
+            printBoard(size, grid);
+            printf("%s won!\n", current_player);
             break;
         }
 
-        // TODO: Handle the case if user provides same number twice.
+        // Managing the player state to switch between both player.
+        if (strcmp(current_player, first_player) == 0) strcpy(current_player, second_player);
+        else strcpy(current_player, first_player);
 
+        printBoard(size, grid);
 
-        *address = (user_state == 0) ? x : o;  // managing the user state to switch between players.
-
-        if (isWon(3, 3, array) == 1) {
-            printBoard(array);
-            printf("Player %d won!\n", user_state);
-            break;
-        }
-
-        //  Managing the player state to switch between both players.
-        if (user_state == 0) user_state = 1;
-        else user_state = 0;
-
-        printBoard(array);
         max_input--;
-        if (max_input == 0) printf("DRAW!!");
+        if (max_input == 0)
+            printf("DRAW!!");
     }
-    
+
     return 0;
 }
 
-
-void printBoard(char array[3][3]) {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            printf("| %c ", array[i][j]);
+void printBoard(int size, char grid[size][size])
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            printf("| %c ", grid[i][j]);
         }
         printf("|\n");
-        printf("+---+---+---+\n");
+        for (int k = 0; k < size; k++) {
+            printf("+---");
+        }
+        printf("+\n");
     }
 }
 
+int isWon(int row, int col, char grid[row][col])
+{
 
-int isWon(int row, int col, char array[row][col]) {
+    // TODO: Refactor asshole.
 
     // row wise.
-    for (int i = 0; i < row; i++) {
+    for (int i = 0; i < row; i++)
+    {
         int by_row = 1;
-        for (int j = 0; j < col - 1; j++) {
+        for (int j = 0; j < col - 1; j++)
+        {
             if (
-                (by_row && (array[i][j] == 'x' && array[i][j + 1] == 'x')) ||
-                (by_row && (array[i][j] == 'o' && array[i][j + 1] == 'o'))
-            ) by_row = 1;
-            else by_row = 0;
+                (by_row && (grid[i][j] == 'x' && grid[i][j + 1] == 'x')) ||
+                (by_row && (grid[i][j] == 'o' && grid[i][j + 1] == 'o')))
+                by_row = 1;
+            else
+                by_row = 0;
         }
-        if (by_row == 1) return by_row;
+        if (by_row == 1)
+            return by_row;
     }
 
-
     // column wise.
-    for (int i = 0; i < row; i++) {
+    for (int i = 0; i < row; i++)
+    {
         int by_col = 1;
-        for (int j = 0; j < col - 1; j++) {
+        for (int j = 0; j < col - 1; j++)
+        {
             if (
-                (by_col && (array[j][i] == 'x' && array[j + 1][i] == 'x')) ||
-                (by_col && (array[j][i] == 'o' && array[j + 1][i] == 'o'))
-            ) by_col = 1;
-            else by_col = 0;
+                (by_col && (grid[j][i] == 'x' && grid[j + 1][i] == 'x')) ||
+                (by_col && (grid[j][i] == 'o' && grid[j + 1][i] == 'o')))
+                by_col = 1;
+            else
+                by_col = 0;
         }
 
-        if (by_col == 1) return by_col;
+        if (by_col == 1)
+            return by_col;
     }
 
     // diagonal.
-    if (array[0][0] == 'x') {
+    if (grid[0][0] == 'x')
+    {
         int by_diag = 1;
-        for (int i = 0; i < row; i++) {
-            if (by_diag && (array[i][i] == 'x')) by_diag = 1;
-            else by_diag = 0;
+        for (int i = 0; i < row; i++)
+        {
+            if (by_diag && (grid[i][i] == 'x'))
+                by_diag = 1;
+            else
+                by_diag = 0;
         }
-        if (by_diag == 1) return by_diag;
-    } else if (array[0][0] == 'o') {
-        int by_diag = 1;
-        for (int i = 0; i < row; i++) {
-            if (by_diag && (array[i][i] == 'o')) by_diag = 1;
-            else by_diag = 0;
-        }
-
-        if (by_diag == 1) return by_diag;
+        if (by_diag == 1)
+            return by_diag;
     }
+    else if (grid[0][0] == 'o')
+    {
+        int by_diag = 1;
+        for (int i = 0; i < row; i++)
+        {
+            if (by_diag && (grid[i][i] == 'o'))
+                by_diag = 1;
+            else
+                by_diag = 0;
+        }
 
+        if (by_diag == 1)
+            return by_diag;
+    }
 
     // anti-diagonal.
     int max_col_index = col - 1;
-    if (array[0][max_col_index] == 'x') {
+    if (grid[0][max_col_index] == 'x')
+    {
         int by_antidiag = 1;
-        for (int i = 0; i < row; i++) {
-            if (by_antidiag && (array[i][max_col_index] == 'x')) by_antidiag = 1;
-            else by_antidiag = 0;
+        for (int i = 0; i < row; i++)
+        {
+            if (by_antidiag && (grid[i][max_col_index] == 'x'))
+                by_antidiag = 1;
+            else
+                by_antidiag = 0;
             max_col_index--;
         }
-        if (by_antidiag == 1) return by_antidiag;
-    } else if (array[0][max_col_index] == 'o') {
-        int by_antidiag = 1;
-        for (int i = 0; i < row; i++) {
-            if (by_antidiag && (array[i][max_col_index] == 'o')) by_antidiag = 1;
-            else by_antidiag = 0;
-            max_col_index--;
-        }
-        if (by_antidiag == 1) return by_antidiag;
+        if (by_antidiag == 1)
+            return by_antidiag;
     }
-
+    else if (grid[0][max_col_index] == 'o')
+    {
+        int by_antidiag = 1;
+        for (int i = 0; i < row; i++)
+        {
+            if (by_antidiag && (grid[i][max_col_index] == 'o'))
+                by_antidiag = 1;
+            else
+                by_antidiag = 0;
+            max_col_index--;
+        }
+        if (by_antidiag == 1)
+            return by_antidiag;
+    }
 
     return 0;
 }
 
-
-void greeting() {
+void greeting()
+{
     printf("________________________________________________________________________________\n");
     printf("\\\\      //\\\\      // |||||||||  ||      ||||||||   |||||||||     ||\\\\    //||  |||||||\n");
     printf(" \\\\    //  \\\\    //  ||         ||      ||        ||       ||    || \\\\  // ||  ||\n");
@@ -187,6 +258,3 @@ void greeting() {
     printf("                    ||     |||||||||       ||     || ||||||        ||      ||     || |||||||          ||     |||||||| ||||||||||  \n");
     printf("________________________________________________________________________________\n");
 }
-
-
-
