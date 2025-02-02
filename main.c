@@ -73,7 +73,11 @@ int main()
     while (max_input != 0)
     {
         int postion;
-        printf("%s, your Turn --> (1-%d): ", current_player, size * size);
+        if (strcmp(current_player, first_player) == 0) {
+            printf("Turn: %s | Chosen Letter: %c | Postion Upto: 1-%d --> ", current_player, first_player_letter, size * size);
+        } else {
+            printf("Turn: %s | Chosen Letter: %c | Postion Upto: 1-%d --> ", current_player, second_player_letter, size * size);
+        }
         scanf("%d", &postion);
 
         if (postion < 1 || postion > size * size)
@@ -85,13 +89,10 @@ int main()
         // Mapping postion to get the indexes.
         int m = 0, n = 0;
         int found = 0; // flag to indicate when to stop the loop.
-        for (int i = 0; i < size && !found; i++)
-        {
-            for (int j = 0; j < size; j++)
-            {
+        for (int i = 0; i < size && !found; i++) {
+            for (int j = 0; j < size; j++) {
                 n += 1;
-                if (n == postion)
-                {
+                if (n == postion) {
                     m = i;
                     n = j;
                     found = 1;
@@ -102,12 +103,8 @@ int main()
 
         address = &grid[m][n];
         // Assigning letters to the players..
-        if (*address == ' ')
-        {
-            *address = (strcmp(current_player, first_player) == 0) ? first_player_letter : second_player_letter;
-        }
-        else
-        {
+        if (*address == ' ') *address = (strcmp(current_player, first_player) == 0) ? first_player_letter : second_player_letter;
+        else {
             printf("Invalid postion! Try agin.\n");
             continue;
         }
@@ -115,7 +112,7 @@ int main()
         if (isWon(size, size, grid) == 1)
         {
             printBoard(size, grid);
-            printf("%s won!\n", current_player);
+            printf("Bam! you won %s:)\n", current_player);
             break;
         }
 

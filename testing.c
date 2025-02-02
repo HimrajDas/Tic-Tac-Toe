@@ -175,8 +175,7 @@ int isWon(int row, int col, char grid[row][col]) {
                 (is_won && (grid[j][i] == 'x' && grid[j + 1][i] == 'x')) ||
                 (is_won && (grid[j][i] == 'o' && grid[j + 1][i] == 'o')))
                 is_won = 1;
-            else
-                is_won = 0;
+            else is_won = 0;
         }
         if (is_won == 1) return is_won;
     }
@@ -186,25 +185,19 @@ int isWon(int row, int col, char grid[row][col]) {
     int max_col = col - 1;
     if (grid[0][0] == 'x') {
         int by_diag = 1;
-        for (int i = 0; i < row; i++)
-        {
-            if (by_diag && (grid[i][i] == 'x'))
-                by_diag = 1;
-            else
-                by_diag = 0;
+        for (int i = 0; i < row; i++) {
+            if (by_diag && (grid[i][i] == 'x')) by_diag = 1;
+            else by_diag = 0;
             max_col--;
         }
-        if (by_diag == 1)
-            return by_diag;
+
+        if (by_diag == 1) return by_diag;
     }
-    else if (grid[0][0] == 'o')
-    {
+    else if (grid[0][0] == 'o') {
         int by_diag = 1;
         for (int i = 0; i < row; i++) {
-            if (by_diag && (grid[i][i] == 'o'))
-                by_diag = 1;
-            else
-                by_diag = 0;
+            if (by_diag && (grid[i][i] == 'o')) by_diag = 1;
+            else by_diag = 0;
             max_col--;
         }
 
@@ -213,35 +206,26 @@ int isWon(int row, int col, char grid[row][col]) {
     }
 
     // anti-diagonal.
-    // int max_col_index = col - 1;
-    // if (grid[0][max_col_index] == 'x')
-    // {
-    //     int by_antidiag = 1;
-    //     for (int i = 0; i < row; i++)
-    //     {
-    //         if (by_antidiag && (grid[i][max_col_index] == 'x'))
-    //             by_antidiag = 1;
-    //         else
-    //             by_antidiag = 0;
-    //         max_col_index--;
-    //     }
-    //     if (by_antidiag == 1)
-    //         return by_antidiag;
-    // }
-    // else if (grid[0][max_col_index] == 'o')
-    // {
-    //     int by_antidiag = 1;
-    //     for (int i = 0; i < row; i++)
-    //     {
-    //         if (by_antidiag && (grid[i][max_col_index] == 'o'))
-    //             by_antidiag = 1;
-    //         else
-    //             by_antidiag = 0;
-    //         max_col_index--;
-    //     }
-    //     if (by_antidiag == 1)
-    //         return by_antidiag;
-    // }
+    int max_col_index = col - 1;
+    if (grid[0][max_col_index] == 'x') {
+        int by_antidiag = 1;
+        for (int i = 0; i < row; i++) {
+            if (by_antidiag && (grid[i][max_col_index] == 'x')) by_antidiag = 1;
+            else by_antidiag = 0;
+            max_col_index--;
+        }
+
+        if (by_antidiag == 1) return by_antidiag;
+    }
+    else if (grid[0][max_col_index] == 'o') {
+        int by_antidiag = 1;
+        for (int i = 0; i < row; i++) {
+            if (by_antidiag && (grid[i][max_col_index] == 'o')) by_antidiag = 1;
+            else by_antidiag = 0;
+            max_col_index--;
+        }
+        if (by_antidiag == 1) return by_antidiag;
+    }
 
     return 0;
 }
