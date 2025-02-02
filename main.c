@@ -39,7 +39,7 @@ int main()
         }
     }
 
-    getchar();
+    getchar(); // to consume the leftover \n of input buffer.
 
     // Take the player names.
     printf("Name of the first player: ");
@@ -158,98 +158,63 @@ int isWon(int row, int col, char grid[row][col])
     // TODO: Refactor asshole.
 
     // row wise.
-    for (int i = 0; i < row; i++)
-    {
-        int by_row = 1;
-        for (int j = 0; j < col - 1; j++)
-        {
+    for (int i = 0; i < row; i++) {
+        int is_won = 1;
+        for (int j = 0; j < col - 1; j++) {
             if (
-                (by_row && (grid[i][j] == 'x' && grid[i][j + 1] == 'x')) ||
-                (by_row && (grid[i][j] == 'o' && grid[i][j + 1] == 'o')))
-                by_row = 1;
-            else
-                by_row = 0;
+                (is_won && (grid[i][j] == 'x' && grid[i][j + 1] == 'x')) ||
+                (is_won && (grid[i][j] == 'o' && grid[i][j + 1] == 'o')) ||
+                (is_won && (grid[j][i] == 'x' && grid[j + 1][i] == 'x')) ||
+                (is_won && (grid[j][i] == 'o' && grid[j + 1][i] == 'o'))
+            )
+                is_won = 1;
+            else is_won = 0;
         }
-        if (by_row == 1)
-            return by_row;
+        if (is_won == 1) return is_won;
     }
 
-    // column wise.
-    for (int i = 0; i < row; i++)
-    {
-        int by_col = 1;
-        for (int j = 0; j < col - 1; j++)
-        {
-            if (
-                (by_col && (grid[j][i] == 'x' && grid[j + 1][i] == 'x')) ||
-                (by_col && (grid[j][i] == 'o' && grid[j + 1][i] == 'o')))
-                by_col = 1;
-            else
-                by_col = 0;
-        }
-
-        if (by_col == 1)
-            return by_col;
-    }
 
     // diagonal.
-    if (grid[0][0] == 'x')
-    {
+    if (grid[0][0] == 'x') {
         int by_diag = 1;
-        for (int i = 0; i < row; i++)
-        {
-            if (by_diag && (grid[i][i] == 'x'))
-                by_diag = 1;
-            else
-                by_diag = 0;
-        }
-        if (by_diag == 1)
-            return by_diag;
-    }
-    else if (grid[0][0] == 'o')
-    {
-        int by_diag = 1;
-        for (int i = 0; i < row; i++)
-        {
-            if (by_diag && (grid[i][i] == 'o'))
-                by_diag = 1;
-            else
-                by_diag = 0;
+        for (int i = 0; i < row; i++) {
+            if (by_diag && (grid[i][i] == 'x')) by_diag = 1;
+            else by_diag = 0;
         }
 
-        if (by_diag == 1)
-            return by_diag;
+        if (by_diag == 1) return by_diag;
+    }
+    else if (grid[0][0] == 'o') {
+        int by_diag = 1;
+        for (int i = 0; i < row; i++) {
+            if (by_diag && (grid[i][i] == 'o')) by_diag = 1;
+            else by_diag = 0;
+        }
+
+        if (by_diag == 1) return by_diag;
     }
 
     // anti-diagonal.
     int max_col_index = col - 1;
-    if (grid[0][max_col_index] == 'x')
-    {
+    if (grid[0][max_col_index] == 'x') {
         int by_antidiag = 1;
-        for (int i = 0; i < row; i++)
-        {
-            if (by_antidiag && (grid[i][max_col_index] == 'x'))
-                by_antidiag = 1;
-            else
-                by_antidiag = 0;
+        for (int i = 0; i < row; i++) {
+            if (by_antidiag && (grid[i][max_col_index] == 'x')) by_antidiag = 1;
+            else by_antidiag = 0;
             max_col_index--;
         }
-        if (by_antidiag == 1)
-            return by_antidiag;
+
+        if (by_antidiag == 1) return by_antidiag;
     }
-    else if (grid[0][max_col_index] == 'o')
-    {
+    else if (grid[0][max_col_index] == 'o') {
         int by_antidiag = 1;
-        for (int i = 0; i < row; i++)
-        {
-            if (by_antidiag && (grid[i][max_col_index] == 'o'))
-                by_antidiag = 1;
-            else
-                by_antidiag = 0;
+        for (int i = 0; i < row; i++) {
+            if (by_antidiag && (grid[i][max_col_index] == 'o')) by_antidiag = 1;
+            else by_antidiag = 0;
             max_col_index--;
         }
-        if (by_antidiag == 1)
-            return by_antidiag;
+
+        if (by_antidiag == 1) return by_antidiag;
     }
 
     return 0;
