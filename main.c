@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 
 void printBoard(int size, char grid[size][size]);
 int isWon(int row, int col, char grid[row][col]);
@@ -54,19 +56,28 @@ int main()
     // Removing the newline character if present
     second_player[strcspn(second_player, "\n")] = '\0';
 
+    srand(time(NULL));
+    int random_number = rand() % 2;
+
     // Let the player choose a letter.
     do {
-        printf("Pick letters: 'x' or 'o'\n");
-        printf("Choose your letter %s: ", first_player);
-        scanf(" %c", &first_player_letter);
-    } while (
-        (first_player_letter != 'x' && first_player_letter != 'o'));
+        printf("Pick one of the letters: 'x' or 'o'\n");
+        if (random_number == 0) {
+            printf("Choose your letter %s: ", first_player);
+            scanf(" %c", &first_player_letter);
+        } else {
+            printf("Choose your letter %s: ", second_player);
+            scanf(" %c", &second_player_letter);
+        }
+    } while (first_player_letter != 'x' && first_player_letter != 'o' &&
+             second_player_letter != 'x' && second_player_letter != 'o');
 
-    // Assigning letter to second player based on first player.
-    second_player_letter = (first_player_letter == 'x') ? 'o' : 'x';
+    if (first_player_letter != 'x' || first_player_letter != 'o') first_player_letter = (second_player_letter == 'x') ? 'o' : 'x';
+    if (second_player_letter != 'x' || second_player_letter != 'o') second_player_letter = (first_player_letter == 'x') ? 'o' : 'x';
 
     char current_player[BUFFER_SIZE];  // player state.
-    strcpy(current_player, first_player);
+    if (random_number == 0) strcpy(current_player, first_player);
+    else strcpy(current_player, second_player);
 
     printBoard(size, grid);
 
