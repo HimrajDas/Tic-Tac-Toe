@@ -56,7 +56,7 @@ int main()
     // Removing the newline character if present
     second_player[strcspn(second_player, "\n")] = '\0';
 
-    srand(time(NULL));
+    srand(time(NULL));       // Generating either 0 or 1 to choose the player randomly.
     int random_number = rand() % 2;
 
     // Let the player choose a letter.
@@ -65,7 +65,7 @@ int main()
         if (random_number == 0) {
             printf("Choose your letter %s: ", first_player);
             scanf(" %c", &first_player_letter);
-        } else {
+        } else if (random_number == 1) {
             printf("Choose your letter %s: ", second_player);
             scanf(" %c", &second_player_letter);
         }
