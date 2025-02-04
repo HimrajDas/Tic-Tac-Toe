@@ -60,8 +60,8 @@ int main()
     int random_number = rand() % 2;
 
     // Let the player choose a letter.
+    printf("Pick one of the letters: 'x' or 'o'\n");
     do {
-        printf("Pick one of the letters: 'x' or 'o'\n");
         if (random_number == 0) {
             printf("Choose your letter %s: ", first_player);
             scanf(" %c", &first_player_letter);
@@ -72,8 +72,8 @@ int main()
     } while (first_player_letter != 'x' && first_player_letter != 'o' &&
              second_player_letter != 'x' && second_player_letter != 'o');
 
-    if (first_player_letter != 'x' || first_player_letter != 'o') first_player_letter = (second_player_letter == 'x') ? 'o' : 'x';
-    if (second_player_letter != 'x' || second_player_letter != 'o') second_player_letter = (first_player_letter == 'x') ? 'o' : 'x';
+    if (first_player_letter != 'x' && first_player_letter != 'o') first_player_letter = (second_player_letter == 'x') ? 'o' : 'x';
+    if (second_player_letter != 'x' && second_player_letter != 'o') second_player_letter = (first_player_letter == 'x') ? 'o' : 'x';
 
     char current_player[BUFFER_SIZE];  // player state.
     if (random_number == 0) strcpy(current_player, first_player);
